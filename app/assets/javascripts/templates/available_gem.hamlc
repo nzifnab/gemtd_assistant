@@ -1,0 +1,32 @@
+%tr{class: "js-gem-option", data: {number: @number}}
+  %td
+    .badge= @number
+  %td
+    != JST["gem_button"](gem: @gem, class: "js-base", select: 'gem')
+  %td.js-gem-recipes
+    - for recipe in @gem.recipes()
+      != JST["gem_button"](name: recipe.name, class: "disabled", select: 'recipe')
+  %td
+    - if (downgraded = @gem.downgrade())?
+      != JST["gem_button"](gem: downgraded, class: "js-base", select: 'gem')
+
+      - for recipe in downgraded.recipes()
+        != JST["gem_button"](name: recipe.name, class: "disabled", select: "recipe")
+
+    - else
+      &mdash;
+  %td
+    - if (upgraded = @gem.upgrade())?
+      != JST["gem_button"](gem: upgraded, class: "disabled js-upgrade", select: "gem")
+
+      - for recipe in upgraded.recipes()
+        != JST["gem_button"](name: recipe.name, class: "disabled .js-upgrade", select: "recipe")
+
+      - if (doubleUpgrade = upgraded.upgrade())?
+        != JST["gem_button"](gem: doubleUpgrade, class: "hidden js-double-upgrade", select: "gem")
+
+    - else
+      &mdash;
+  %td
+    %a.muted.js-remove-gem-option{href: '#'}
+      %i.icon-remove

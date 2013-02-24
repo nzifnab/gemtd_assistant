@@ -1,0 +1,4 @@
+%li.span2
+  %a.muted.js-remove-gem{href: '#'}
+    %i.icon-remove
+  = @gem.fullName()

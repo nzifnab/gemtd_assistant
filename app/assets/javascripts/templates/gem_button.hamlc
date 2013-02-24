@@ -1,0 +1,2 @@
+%button.btn{class: @class, type: 'button', data: {select: @select, value: @name ? @gem?.fullName()}}= @name ? @gem?.fullName()
+%br

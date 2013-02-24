@@ -1,0 +1,14 @@
+%table.table.table-striped.table-condensed.js-gem-recipes
+  %caption Recipes
+  %thead
+    %tr
+      %th{title: "Priority"} P
+      %th Name
+      %th{title: "Quantity"} Q
+      %th Gem 1
+      %th Gem 2
+      %th Gem 3
+      %th Gem 4
+      %th Total
+  %tbody
+    = render partial: 'desired_recipe_line_item', collection: @recipes, as: :recipe

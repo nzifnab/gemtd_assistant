@@ -1,0 +1,10 @@
+@import "compass";
+@import "compass_twitter_bootstrap_awesome";
+@import "compass_twitter_bootstrap_responsive";
+@import "partials/forms";
+@import "partials/typography";
+@import "partials/effects";
+
+.hidden{
+  visibility: visible;
+}

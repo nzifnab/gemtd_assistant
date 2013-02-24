@@ -1,0 +1,9 @@
+%tr
+  %td= text_field_tag("#{recipe[0]}_priority", 1, class: 'js-priority js-refresh-recipe input-tiny text-center', size: 2, maxlength: 2, title: "Priority")
+  %td.js-recipe-name= recipe[0].to_s.titleize
+  %td= text_field_tag("#{recipe[0]}_quantity", 1, class: ' js-quantity js-refresh-recipe input-tiny text-center', size: 2, maxlength: 2, title: "Quantity")
+  %td.js-gem1-name= recipe[1][0].to_s.titleize
+  %td.js-gem2-name= recipe[1][1].to_s.titleize
+  %td.js-gem3-name= recipe[1][2].to_s.titleize
+  %td.js-gem4-name= recipe[1][3].to_s.titleize
+  %td.js-recipe-gem-total= recipe[1].size
