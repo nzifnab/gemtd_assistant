@@ -6,6 +6,15 @@ class window.GemSuggestor
     downgrades = (GemSuggestor.availableGems.map (gem) -> gem.downgrade()).reject (gem) -> !gem?
     @suggestableGems.push(downgrades...)
 
+    # First let's check if there's any available one-shots
+    # that haven't been saturated and use the highest priority one
+    @oneshotRecipes = []
+    @filterOneshotRecipes()
+    if @oneshotRecipes.length > 0
+      return @oneshotRecipes.uniq()
+
+    # No one-shots...continue checking gems
+
     # Step 1:  Select only gems that have not been saturated yet
     @rejectSaturatedGems()
     # Step 2:  Collect only those gems from the highest
@@ -24,6 +33,22 @@ class window.GemSuggestor
     @filterHighestQuality()
 
     @suggestableGems.uniq()
+
+  filterOneshotRecipes: ->
+    for gem in GemSuggestor.availableGems
+      for recipe in gem.recipes()
+        if recipe.isOneshot() && recipe.gems.areAny((gem) -> gem.remainingQuantity() > 0)
+          @oneshotRecipes.push(recipe)
+
+    maxPriorityFound = -1000
+    recipes = []
+    for recipe in @oneshotRecipes
+      if recipe.priority > maxPriorityFound
+        maxPriorityFound = recipe.priority
+        recipes = [recipe]
+      else if recipe.priority == maxPriorityFound
+        recipes.push(recipe)
+    @oneshotRecipes = recipes
 
   filterHighestQuality: ->
     maxRank = 0
@@ -144,6 +169,15 @@ class window.GemSuggestor
       if gem.fullName() == $.trim($button.data('value'))
         $button.addClass("disabled").removeClass("btn-info")
 
+  @enableRecipeButtons: ->
+    buttons = $(".js-gem-recipes .btn[data-select=recipe]")
+
+    buttons.each (index, button) =>
+      $button = $(button)
+      recipe = Recipe.findByName($button.data('value'))
+      if recipe.isOneshot()
+        $button.addClass("btn-success").removeClass("disabled")
+
   @availableGems: []
 
   @addGem: (gem) ->
@@ -176,11 +210,44 @@ class window.GemSuggestor
     (new GemSuggestor.suggestion())
 
   @refreshSuggestion: ->
+    Gem.refreshVolatileCaches()
+    Recipe.refreshVolatileCaches()
     suggestions = (new GemSuggestor()).suggestions()
     $(".js-suggested-gem").show()
     $(".js-suggestions").empty()
     for gem in suggestions
-      tmpl = JST["gem_button"](class: "btn-primary", gem: gem, select: 'gem')
+      tmpl = JST["gem_button"](class: "btn-primary", object: gem)
       $(".js-suggestions").append $(tmpl)
+    $(".js-suggestions i").remove()
     window.registerHotkey $(".js-suggestions .btn").first().attr("data-hotkey", "%enter").
       data("hotkey", "%enter")
+    @refreshNotificationIcons()
+    @enableRecipeButtons()
+
+  @refreshNotificationIcons: ->
+    $("[data-notification-for]").removeClass("icon-star-empty").
+      removeClass("icon-star").removeClass("notification-partial-saturation").
+      removeClass("notification-exact-saturation").
+      removeClass("notification-over-saturation")
+
+    $("[data-notification-for]").each (index, icon) =>
+      $icon = $(icon)
+      gem = Gem.findByFullName($icon.data("notification-for"))
+      selectedQuantity = gem.selectedQuantity()
+      recipeQuantity = gem.recipeQuantity()
+
+      if selectedQuantity > 0 && recipeQuantity > 0
+        $icon.addClass("icon-star")
+
+      # The gem is needed, but has not been collected at all yet
+      if selectedQuantity == 0 && recipeQuantity > 0
+        $icon.addClass("icon-star-empty")
+      # The gem has been collected, but more are required
+      else if selectedQuantity > 0 && recipeQuantity > selectedQuantity
+        $icon.addClass("notification-partial-saturation")
+      # The gem has been collected the exact number of times required
+      else if selectedQuantity == recipeQuantity
+        $icon.addClass("notification-exact-saturation")
+      # The gem has been collected more times than required
+      else if selectedQuantity > recipeQuantity
+        $icon.addClass("notification-over-saturation")

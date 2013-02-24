@@ -39,3 +39,15 @@ Array::uniq = ->
   for v in this
     result.push(v) if $.inArray(v, result) == -1
   result
+
+# Same as ruby's `Array#all?` method
+Array::areAll = (checkFunction) ->
+  for v in this
+    return false unless checkFunction(v) == true
+  true
+
+# Same as ruby's `Array#any?` method
+Array::areAny = (checkFunction) ->
+  for v in this
+    return true if checkFunction(v) == true
+  false

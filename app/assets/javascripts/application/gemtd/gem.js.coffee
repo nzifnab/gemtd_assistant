@@ -1,6 +1,7 @@
 class window.Gem
   constructor: (@quality, @type) ->
     @selectedCount = 0
+    @name = @fullName()
 
   fullName: ->
     @_fullName ?= [@displayQuality(), @displayType()].compact().join(" ")
@@ -24,31 +25,40 @@ class window.Gem
     @_upgrade ?= Gem.find(GemQuality.find(@quality.rank + 1), @type)
 
   recipeQuantity: ->
-    @recipes().inject(0, ((sum, recipe) -> sum+recipe.quantity))
+    @_recipeQuantity ?= @recipes().inject(0, ((sum, recipe) -> sum+recipe.quantity))
 
   selectedQuantity: ->
-    Gem.selectedGems.countOfValue(this)
+    @_selectedQuantity ?= Gem.selectedGems.countOfValue(this)
 
   remainingQuantity: ->
-    [@recipeQuantity() - @selectedQuantity(), 0].max()
+    @_remainingQuantity ?= [@recipeQuantity() - @selectedQuantity(), 0].max()
 
   priority: ->
-    @recipes().max -1, (recipe) =>
+    @_priority ?= @recipes().max -1, (recipe) =>
       recipe.priority
 
   isSaturated: ->
-    @selectedQuantity() >= @recipeQuantity()
+    @_isSaturated ?= @selectedQuantity() >= @recipeQuantity()
 
   outnumbersRecipeSiblings: ->
-    for recipe in @recipes()
-      for gem in recipe.gems
-        return true if gem.selectedQuantity() < @selectedQuantity()
-    false
+    @_outnumbersRecipeSiblings ?= do =>
+      for recipe in @recipes()
+        for gem in recipe.gems
+          return true if gem.selectedQuantity() < @selectedQuantity()
+      false
 
   select: ->
     tmpl = JST["selected_gem"](gem: this)
     $(".js-selected-gems").append tmpl
     Gem.selectedGems.push(this)
+
+  refreshVolatileCache: ->
+    @_recipeQuantity = null
+    @_selectedQuantity = null
+    @_remainingQuantity = null
+    @_priority = null
+    @_isSaturated = null
+    @_outnumbersRecipeSiblings = null
 
   @selectedGems: []
 
@@ -74,3 +84,7 @@ class window.Gem
     quality = null if quality == "Normal"
     type = "God" if quality == "Stone of"
     @findByFullName([quality, type].compact().join(" "))
+
+  @refreshVolatileCaches: ->
+    for gem in @all()
+      gem.refreshVolatileCache()

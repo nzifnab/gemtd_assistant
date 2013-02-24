@@ -11,21 +11,28 @@ class window.Recipe
     @gems = gems ? @gems.compact()
 
   toString: ->
-    @name
+    @name()
+
+  isOneshot: ->
+    @_isOneshot ?= @gems.length > 1 && @gems.areAll (gem) ->
+      $.inArray(gem, GemSuggestor.availableGems) != -1
+
+  refreshVolatileCache: ->
+    @_isOneshot = null
 
   @all: ->
     @allRecipes ?= do =>
       r = []
-      $(".js-gem-recipes tr").each ->
+      $(".js-gem-recipes tbody tr").each ->
         r.push(Recipe.fromDomRow($(this)))
       r
 
   @fromDomRow: ($domRow) ->
     options = {
       priority: $domRow.find(".js-priority").val(),
-      name: $domRow.find(".js-recipe-name").text(),
+      name: $domRow.find(".js-recipe-name").data('value'),
       quantity: $domRow.find(".js-quantity").val(),
-      gems: (Gem.findByFullName($domRow.find(".js-gem#{num}-name").text()) for num in [1..4])
+      gems: (Gem.findByFullName($domRow.find(".js-gem#{num}-name").data('value')) for num in [1..4])
     }
     new Recipe(options)
 
@@ -37,3 +44,7 @@ class window.Recipe
   @findByName: (name) ->
     @all().find (recipe) ->
       recipe.name == name
+
+  @refreshVolatileCaches: ->
+    for recipe in @all()
+      recipe.refreshVolatileCache()

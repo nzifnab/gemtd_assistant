@@ -2,28 +2,28 @@
   %td
     .badge= @number
   %td
-    != JST["gem_button"](gem: @gem, class: "js-base", select: 'gem')
+    != JST["gem_button"](object: @gem, class: "js-base")
   %td.js-gem-recipes
     - for recipe in @gem.recipes()
-      != JST["gem_button"](name: recipe.name, class: "disabled", select: 'recipe')
+      != JST["gem_button"](object: recipe, class: "disabled")
   %td
     - if (downgraded = @gem.downgrade())?
-      != JST["gem_button"](gem: downgraded, class: "js-base", select: 'gem')
+      != JST["gem_button"](object: downgraded, class: "js-base")
 
       - for recipe in downgraded.recipes()
-        != JST["gem_button"](name: recipe.name, class: "disabled", select: "recipe")
+        != JST["gem_button"](object: recipe, class: "disabled")
 
     - else
       &mdash;
   %td
     - if (upgraded = @gem.upgrade())?
-      != JST["gem_button"](gem: upgraded, class: "disabled js-upgrade", select: "gem")
+      != JST["gem_button"](object: upgraded, class: "disabled js-upgrade")
 
       - for recipe in upgraded.recipes()
-        != JST["gem_button"](name: recipe.name, class: "disabled .js-upgrade", select: "recipe")
+        != JST["gem_button"](object: recipe, class: "disabled .js-upgrade")
 
       - if (doubleUpgrade = upgraded.upgrade())?
-        != JST["gem_button"](gem: doubleUpgrade, class: "hidden js-double-upgrade", select: "gem")
+        != JST["gem_button"](object: doubleUpgrade, class: "hidden js-double-upgrade")
 
     - else
       &mdash;

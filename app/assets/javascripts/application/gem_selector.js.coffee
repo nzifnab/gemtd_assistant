@@ -25,7 +25,7 @@ $ ->
 
   $("body").on "keyup", "input.js-refresh-recipe", (e) ->
     row = $(this).closest("tr")
-    name = row.find(".js-recipe-name").text()
+    name = row.find(".js-recipe-name").data('value')
     recipe = Recipe.findByName(name)
     priority = row.find(".js-priority").val()
     quantity = row.find(".js-quantity").val()
@@ -36,10 +36,19 @@ $ ->
     e.preventDefault()
 
     unless $(this).is(".disabled")
+      (new GemSuggestor).disableButtons()
       gem = Gem.findByFullName($.trim($(this).data('value')))
       gem.select()
       $(".js-clear-choices").trigger("click")
-      GemSuggestor.refreshSuggestion()
+
+  $("body").on "click", ".btn[data-select=recipe]", (e) ->
+    e.preventDefault()
+
+    unless $(this).is(".disabled")
+      (new GemSuggestor).disableButtons()
+      recipe = Recipe.findByName($(this).data('value'))
+      $.each recipe.gems, (index, gem) -> gem.select()
+      $(".js-clear-choices").trigger("click")
 
   $("body").on "click", ".js-remove-gem", (e) ->
     e.preventDefault()
@@ -57,6 +66,8 @@ $ ->
     $(".js-remove-gem-option").trigger("click")
     $(".js-gem-selector .btn.active").removeClass("active")
     $(".js-gem-selector .btn-group").data("value", null)
+
+  GemSuggestor.refreshSuggestion()
 
   hideAlerts = ->
     $(".js-selection-alert").hide('slow')
