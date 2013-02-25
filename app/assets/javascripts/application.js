@@ -13,5 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require hamlcoffee
+//= require bootstrap-transition
+//= require bootstrap-modal
+//= require json2
+//= require jstorage.min
 //= require_tree ./application
 //= require_tree ./templates

@@ -82,7 +82,7 @@ class window.Gem
     return undefined unless quality? && type?
 
     quality = null if quality == "Normal"
-    type = "God" if quality == "Stone of"
+    type = "God" if quality == "Stone Of"
     @findByFullName([quality, type].compact().join(" "))
 
   @refreshVolatileCaches: ->

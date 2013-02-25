@@ -1,0 +1,5 @@
+%li.js-saveable-configuration{data: {value: @configName}}
+  %button.btn.js-select-configuration{type: 'button'} Select
+  %label= @configName
+  %a.muted.js-delete-configuration{href: '#'}
+    %i.icon-remove

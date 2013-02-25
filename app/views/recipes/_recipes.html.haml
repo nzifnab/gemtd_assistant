@@ -1,5 +1,4 @@
 %table.table.table-striped.table-condensed.js-gem-recipes
-  %caption Recipes
   %thead
     %tr
       %th{title: "Priority"} P
@@ -10,4 +9,5 @@
       %th Gem 3
       %th Gem 4
   %tbody
-    = render partial: 'desired_recipe_line_item', collection: @recipes, as: :recipe
+    = render partial: 'recipes/recipe', collection: @recipes, as: :recipe
+    = render partial: 'recipes/recipe', collection: @upgrade_recipes, as: :recipe, klass: 'js-optional-recipe'

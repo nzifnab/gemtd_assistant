@@ -1,6 +1,7 @@
 class MainController < ApplicationController
   def index
     @recipes = recipes
+    @upgrade_recipes = upgrade_recipes
   end
 
   private
@@ -20,6 +21,20 @@ class MainController < ApplicationController
       [:red_crystal, [:ruby, :emerald, :flawed_amethyst]],
       [:uranium_238, [:perfect_topaz, :sapphire, :flawed_opal]],
       [:yellow_sapphire, [:perfect_sapphire, :flawless_topaz, :flawless_ruby]]
+    ]
+  end
+
+  def upgrade_recipes
+    [
+      [:great_opal, [:great_opal]],
+      [:great_emerald, [:great_emerald]],
+      [:great_amethyst, [:great_amethyst]],
+      [:great_diamond, [:great_diamond]],
+      [:great_aquamarine, [:great_aquamarine]],
+      [:great_ruby, [:great_ruby]],
+      [:great_sapphire, [:great_sapphire]],
+      [:great_topaz, [:great_topaz]],
+      [:stone_of_god, [:stone_of_god]]
     ]
   end
 end

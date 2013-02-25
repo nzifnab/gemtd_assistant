@@ -1,4 +1,5 @@
-%tr
+- klass ||= ''
+%tr{class: klass}
   %td= text_field_tag("#{recipe[0]}_priority", 1, class: 'js-priority js-refresh-recipe input-tiny text-center', size: 2, maxlength: 2, title: "Priority")
   %td.js-recipe-name{data: {value: recipe[0].to_s.titleize}}
     = recipe[0].to_s.titleize

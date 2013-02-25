@@ -48,3 +48,19 @@ class window.Recipe
   @refreshVolatileCaches: ->
     for recipe in @all()
       recipe.refreshVolatileCache()
+
+  @export: ->
+    data = {}
+    for recipe in @all()
+      data[recipe.name] = {
+        priority: recipe.priority,
+        quantity: recipe.quantity
+      }
+    data
+
+  @import: (data) ->
+    for key, value of own data
+      fieldIdentifier = key.replace(/\ /g, "").toLowerCase()
+      $("##{fieldIdentifier}_priority").val(value['priority'])
+      $("##{fieldIdentifier}_quantity").val(value['quantity'])
+    @allRecipes = null

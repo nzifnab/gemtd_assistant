@@ -1,21 +1,8 @@
-.row.js-gem-selector
+.row.js-gem-selector.medium-break-after
   .span1
-    .btn-group.btn-group-vertical.btn-block.js-gem-quality{data: {toggle: 'buttons-radio'}}
-      %button.btn.btn-block{type: 'button', data: {value: 'Chipped', hotkey: 'c'}} Chipped
-      %button.btn.btn-block{type: 'button', data: {value: 'Flawed', hotkey: 'f'}} Flawed
-      %button.btn.btn-block{type: 'button', data: {value: 'Normal', hotkey: 'n'}} Normal
-      %button.btn.btn-block{type: 'button', data: {value: 'Flawless', hotkey: 'l'}} Flawless
-      %button.btn.btn-block{type: 'button', data: {value: 'Perfect', hotkey: 'p'}} Perfect
+    = render partial: 'gems/qualities'
   .span1
-    .btn-group.btn-group-vertical.btn-block.js-gem-type{data: {toggle: 'buttons-radio'}}
-      %button.btn.btn-block.btn-info{type: 'button', data: {value: 'Opal', hotkey: 'o'}} Opal
-      %button.btn.btn-block.btn-info{type: 'button', data: {value: 'Emerald', hotkey: 'e'}} Emerald
-      %button.btn.btn-block.btn-info{type: 'button', data: {value: 'Amethyst', hotkey: 'a'}} Amethyst
-      %button.btn.btn-block.btn-info{type: 'button', data: {value: 'Diamond', hotkey: 'd'}} Diamond
-      %button.btn.btn-block.btn-info{type: 'button', data: {value: 'Aquamarine', hotkey: 'q'}} Aquamarine
-      %button.btn.btn-block.btn-info{type: 'button', data: {value: 'Ruby', hotkey: 'r'}} Ruby
-      %button.btn.btn-block.btn-info{type: 'button', data: {value: 'Sapphire', hotkey: 's'}} Sapphire
-      %button.btn.btn-block.btn-info{type: 'button', data: {value: 'Topaz', hotkey: 't'}} Topaz
+    = render partial: 'gems/types'
   .span2
     %button.btn.btn-block.btn-success.js-submit-choice{type: 'button', data: {hotkey: '%space'}} Add
     %button.btn.btn-block.btn-danger.js-clear-choices{type: 'button'} Reset All
@@ -39,13 +26,4 @@
         %button.btn.btn-primary{type: 'button', data: {hotkey: '%enter'}} Test
     %br
     %br
-    %table.table.table-striped.table-bordered.table-condensed
-      %thead
-        %tr
-          %th #
-          %th Gem Name
-          %th Used in Recipe
-          %th Downgraded
-          %th Upgraded
-          %th
-      %tbody.js-available-gems
+    = render partial: 'gems/available'

@@ -13,19 +13,22 @@ $ ->
   keyCodeMap[32] = '%space'
   keyCodeMap[8] = '%backspace'
 
-  $('body').on "click", ".btn-group[data-toggle='buttons-radio'] .btn", (e) ->
+  $('body').on "click", ".js-btn-group[data-toggle='buttons-radio'] .btn", (e) ->
     activateRadioButton($(this))
 
   activateRadioButton = ($element) ->
-    $element.parent('.btn-group').data('value', $element.data('value')).children('.btn').removeClass('active')
+    $element.parent('.js-btn-group').data('value', $element.data('value')).children('.btn').removeClass('active')
     $element.addClass('active')
 
   $('body').on "keypress", (e) ->
-    keyPressed = keyCodeMap[e.keyCode || e.which]
+    $target = $(e.target)
 
-    if keyPressed? && ($element = $(this).find("[data-hotkey='#{keyPressed}']")).length > 0
-      e.preventDefault()
-      $element.first().trigger('click')
+    unless $target.is("input")
+      keyPressed = keyCodeMap[e.keyCode || e.which]
+
+      if keyPressed? && ($element = $(this).find("[data-hotkey='#{keyPressed}']")).length > 0
+        e.preventDefault()
+        $element.first().trigger('click')
 
   $("[data-hotkey]").each ->
     registerHotkey(this)

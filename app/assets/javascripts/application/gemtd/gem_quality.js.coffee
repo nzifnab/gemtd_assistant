@@ -12,7 +12,7 @@ class window.GemQuality
         q.push new GemQuality($(qualityButton).data('value'), i+1)
         lastRank = i+1
       q.push new GemQuality("Great", lastRank + 1)
-      q.push new GemQuality("Stone of", lastRank + 2)
+      q.push new GemQuality("Stone Of", lastRank + 2)
       q
 
   @find: (rank) ->
