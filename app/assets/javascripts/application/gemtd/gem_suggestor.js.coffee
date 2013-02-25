@@ -186,7 +186,7 @@ class window.GemSuggestor
     $tmpl.show('slow')
 
     $(".js-gem-selector .btn.active").removeClass("active")
-    $(".js-gem-selector .btn-group").data("value", null)
+    $(".js-gem-selector .js-btn-group").data("value", null)
     @availableGems.push(gem)
     @refreshSuggestion()
 
@@ -224,6 +224,10 @@ class window.GemSuggestor
     @refreshNotificationIcons()
     @enableRecipeButtons()
 
+    $(".js-gem-total-needed").text(Recipe.totalGemCount())
+    $(".js-gem-collected").text(Gem.selectedGems.length)
+    $(".js-gem-remaining").text(Gem.totalRemainingQuantity())
+
   @refreshNotificationIcons: ->
     $("[data-notification-for]").removeClass("icon-star-empty").
       removeClass("icon-star").removeClass("notification-partial-saturation").
@@ -236,11 +240,12 @@ class window.GemSuggestor
       selectedQuantity = gem.selectedQuantity()
       recipeQuantity = gem.recipeQuantity()
 
-      if selectedQuantity > 0 && recipeQuantity > 0
+      # The gem is needed in some fashion
+      if recipeQuantity > 0
         $icon.addClass("icon-star")
 
-      # The gem is needed, but has not been collected at all yet
-      if selectedQuantity == 0 && recipeQuantity > 0
+      # The gem is not needed at all
+      if recipeQuantity <= 0
         $icon.addClass("icon-star-empty")
       # The gem has been collected, but more are required
       else if selectedQuantity > 0 && recipeQuantity > selectedQuantity

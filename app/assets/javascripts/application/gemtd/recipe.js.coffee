@@ -1,14 +1,15 @@
 class window.Recipe
-  constructor: ({priority, @name, quantity, @gems}) ->
+  constructor: ({priority, @name, quantity, @gems, @extended}) ->
     @priority = Number(priority)
     @quantity = Number(quantity)
     @gems = @gems.compact()
 
-  updateAttributes: ({priority, name, quantity, gems}) ->
+  updateAttributes: ({priority, name, quantity, gems, extended}) ->
     @priority = Number(priority) ? @priority
     @name = name ? @name
     @quantity = Number(quantity) ? @quantity
     @gems = gems ? @gems.compact()
+    @extended = extended ? @extended
 
   toString: ->
     @name()
@@ -32,7 +33,8 @@ class window.Recipe
       priority: $domRow.find(".js-priority").val(),
       name: $domRow.find(".js-recipe-name").data('value'),
       quantity: $domRow.find(".js-quantity").val(),
-      gems: (Gem.findByFullName($domRow.find(".js-gem#{num}-name").data('value')) for num in [1..4])
+      gems: (Gem.findByFullName($domRow.find(".js-gem#{num}-name").data('value')) for num in [1..4]),
+      extended: $domRow.is(".js-extended-recipe")
     }
     new Recipe(options)
 
@@ -59,8 +61,17 @@ class window.Recipe
     data
 
   @import: (data) ->
-    for key, value of own data
-      fieldIdentifier = key.replace(/\ /g, "").toLowerCase()
+    for own key, value of data
+      fieldIdentifier = key.replace(/\ /g, "_").toLowerCase()
       $("##{fieldIdentifier}_priority").val(value['priority'])
       $("##{fieldIdentifier}_quantity").val(value['quantity'])
     @allRecipes = null
+    for gem in Gem.all()
+      gem._recipes = null
+
+  @totalGemCount: ->
+    @all().inject 0, (sum, recipe) ->
+      if recipe.extended
+        sum
+      else
+        recipe.gems.length * recipe.quantity + sum

@@ -1,4 +1,4 @@
 %li.js-loadable-configuration{data: {value: @configName}}
-  %button.btn.js-select-configuration{type: 'button', data: {value: @configName}}= @configName
-  %a.muted.js-delete-configuration.pull-left{href: '#'}
+  %button.btn.js-load-configuration{type: 'button'}= @configName
+  %a.muted.js-delete-configuration{href: '#'}
     %i.icon-remove

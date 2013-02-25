@@ -8,7 +8,7 @@ class window.GemQuality
     @_all ?= do =>
       q = []
       lastRank = 0
-      $(".btn-group.js-gem-quality .btn").each (i, qualityButton) ->
+      $(".js-btn-group.js-gem-quality .btn").each (i, qualityButton) ->
         q.push new GemQuality($(qualityButton).data('value'), i+1)
         lastRank = i+1
       q.push new GemQuality("Great", lastRank + 1)

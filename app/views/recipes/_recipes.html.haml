@@ -1,3 +1,4 @@
+%h3.js-recipe-title Recipes
 %table.table.table-striped.table-condensed.js-gem-recipes
   %thead
     %tr
@@ -10,4 +11,4 @@
       %th Gem 4
   %tbody
     = render partial: 'recipes/recipe', collection: @recipes, as: :recipe
-    = render partial: 'recipes/recipe', collection: @upgrade_recipes, as: :recipe, klass: 'js-optional-recipe'
+    = render partial: 'recipes/recipe', collection: @upgrade_recipes, as: :recipe, locals: {klass: 'js-extended-recipe muted'}

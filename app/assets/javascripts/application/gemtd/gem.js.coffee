@@ -32,6 +32,7 @@ class window.Gem
 
   remainingQuantity: ->
     @_remainingQuantity ?= [@recipeQuantity() - @selectedQuantity(), 0].max()
+    @_remainingQuantity
 
   priority: ->
     @_priority ?= @recipes().max -1, (recipe) =>
@@ -88,3 +89,11 @@ class window.Gem
   @refreshVolatileCaches: ->
     for gem in @all()
       gem.refreshVolatileCache()
+
+  @totalRemainingQuantity: ->
+    perfectRank = GemQuality.findByName("Perfect").rank
+    @all().inject 0, (sum, gem) ->
+      if gem.quality.rank <= perfectRank
+        sum + gem.remainingQuantity()
+      else
+        sum

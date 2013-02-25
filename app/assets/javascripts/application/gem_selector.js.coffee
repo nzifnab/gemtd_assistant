@@ -32,6 +32,8 @@ $ ->
     recipe.updateAttributes({priority, quantity})
     GemSuggestor.refreshSuggestion()
 
+    saveConfig("__default")
+
   $("body").on "click", ".btn[data-select=gem]", (e) ->
     e.preventDefault()
 
@@ -65,7 +67,7 @@ $ ->
     e.preventDefault()
     $(".js-remove-gem-option").trigger("click")
     $(".js-gem-selector .btn.active").removeClass("active")
-    $(".js-gem-selector .btn-group").data("value", null)
+    $(".js-gem-selector .js-btn-group").data("value", null)
 
   GemSuggestor.refreshSuggestion()
 
@@ -86,7 +88,7 @@ $ ->
 #
     #  $(".js-gem#{gemIndex}").show('slow')
     #  $(".js-gem-selector .btn.active").removeClass("active")
-    #  $(".js-gem-selector .btn-group").data("value", null)
+    #  $(".js-gem-selector .js-btn-group").data("value", null)
     #else
     #  $(".js-selection-alert").show()
 
