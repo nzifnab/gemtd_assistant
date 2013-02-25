@@ -1,4 +1,6 @@
 class window.GemSuggestor
+  constructorName: "GemSuggestor"
+
   suggestions: ->
     @disableButtons()
     @suggestableGems = GemSuggestor.availableGems.slice(0)

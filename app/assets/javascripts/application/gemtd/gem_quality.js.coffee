@@ -1,6 +1,8 @@
 class window.GemQuality
   constructor: (@name, @rank) ->
 
+  constructorName: "GemQuality"
+
   toString: ->
     @name
 

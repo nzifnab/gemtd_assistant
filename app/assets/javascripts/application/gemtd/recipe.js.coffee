@@ -4,6 +4,8 @@ class window.Recipe
     @quantity = Number(quantity)
     @gems = @gems.compact()
 
+  constructorName: "Recipe"
+
   updateAttributes: ({priority, name, quantity, gems, extended}) ->
     @priority = Number(priority) ? @priority
     @name = name ? @name

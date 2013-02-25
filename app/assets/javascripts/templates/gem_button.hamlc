@@ -1,4 +1,4 @@
-- selector = @object.constructor.name.toLowerCase()
+- selector = @object.constructorName.toLowerCase()
 %button.btn.btn-block{class: @class, type: 'button', data: {select: selector, value: @object.name}}
   - if selector == 'gem'
     %i.icon-star{data: {"notification-for" => @object.name}}

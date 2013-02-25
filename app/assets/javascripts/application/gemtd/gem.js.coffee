@@ -3,6 +3,8 @@ class window.Gem
     @selectedCount = 0
     @name = @fullName()
 
+  constructorName: "Gem"
+
   fullName: ->
     @_fullName ?= [@displayQuality(), @displayType()].compact().join(" ")
 

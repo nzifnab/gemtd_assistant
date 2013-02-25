@@ -1,6 +1,8 @@
 class window.GemType
   constructor: (@name) ->
 
+  constructorName: "GemType"
+
   toString: ->
     @name
 
