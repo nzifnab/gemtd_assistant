@@ -17,8 +17,9 @@ class window.Recipe
     @name()
 
   isOneshot: ->
-    @_isOneshot ?= @gems.length > 1 && @gems.areAll (gem) ->
-      $.inArray(gem, GemSuggestor.availableGems) != -1
+    @_isOneshot ?= do =>
+      @gems.length > 1 && @gems.areAll (gem) ->
+        $.inArray(gem, GemSuggestor.availableGems) != -1
 
   refreshVolatileCache: ->
     @_isOneshot = null

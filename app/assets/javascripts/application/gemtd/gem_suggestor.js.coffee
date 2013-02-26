@@ -12,8 +12,6 @@ class window.GemSuggestor
     # that haven't been saturated and use the highest priority one
     @oneshotRecipes = []
     @filterOneshotRecipes()
-    if @oneshotRecipes.length > 0
-      return @oneshotRecipes.uniq()
 
     # No one-shots...continue checking gems
 
@@ -34,7 +32,14 @@ class window.GemSuggestor
     #          (perfect > flawless > normal > flawed > chipped)
     @filterHighestQuality()
 
-    @suggestableGems.uniq()
+    # We want to prioritize one-shot recipes.
+    # but if by some miracle you got a great or better
+    # you probably want that instead.
+    greatRank = GemQuality.findByName("Great").rank
+    if @oneshotRecipes.length <= 0 || (@suggestableGems.areAny (gem) -> gem.quality.rank >= greatRank)
+      @suggestableGems.uniq()
+    else
+      @oneshotRecipes.uniq()
 
   filterOneshotRecipes: ->
     for gem in GemSuggestor.availableGems
@@ -99,24 +104,37 @@ class window.GemSuggestor
 
   filterHighestPriority: ->
     priorities = @suggestableGems.map (gem) -> gem.priority()
-    maxPriorityFound = -1
+    # We'll calculate perfects+ and 'others' separately
+    # -- we want perfects to be included after this step
+    # but also for them to follow the same rules as non-perfects
+    # (IE. if there's multiple perfects we only want the highest
+    # priority one)
+    maxPriorityFound = -1000
+    maxPerfectPriorityFound = -1000
     gems = []
-    forcedGems = []
+    perfectGems = []
+    perfectRank = GemQuality.findByName("Perfect").rank
 
     for priority, index in priorities
       gem = @suggestableGems[index]
-      if gem.quality.rank >= GemQuality.findByName("Perfect").rank
-        forcedGems.push gem
 
       unless gem.outnumbersRecipeSiblings()
-        if priority > maxPriorityFound
-          maxPriorityFound = priority
-          gems = [gem]
-        else if priority == maxPriorityFound
-          gems.push gem
+        if gem.quality.rank >= perfectRank
+          if priority > maxPerfectPriorityFound
+            maxPerfectPriorityFound = priority
+            perfectGems = [gem]
+          else if priority == maxPerfectPriorityFound
+            perfectGems.push gem
+        else
+          if priority > maxPriorityFound
+            maxPriorityFound = priority
+            gems = [gem]
+          else if priority == maxPriorityFound
+            gems.push gem
+
+    gems.push(perfectGems...)
 
     if gems.length > 0
-      gems.push(forcedGems...)
       @suggestableGems = gems
 
   rejectSaturatedGems: ->
