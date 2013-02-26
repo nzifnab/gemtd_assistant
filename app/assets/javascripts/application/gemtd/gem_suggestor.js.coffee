@@ -163,8 +163,9 @@ class window.GemSuggestor
       upgradeGems = upgradeGems.compact()
     @suggestableGems.push(upgradeGems...)
 
-  disableButtons: ->
-    $buttons = $(".js-gem-option .btn[data-select]").filter(':not(.js-base)')
+  disableButtons: (disableAll = false) ->
+    $buttons = $(".js-gem-option .btn[data-select]")
+    $buttons = $buttons.filter(':not(.js-base)') unless disableAll
 
     $buttons.addClass("disabled").removeClass("btn-primary").
       removeClass("btn-info").removeClass("btn-success")

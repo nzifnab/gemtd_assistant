@@ -23,6 +23,21 @@ $ ->
     key = $(this).closest("li").data("value")
     $("#configuration_name").val(key)
 
+  $("body").on "click", ".js-load-default-config", (e) ->
+    e.preventDefault()
+
+    defaultConfig = {}
+    for recipe in Recipe.all()
+      defaultConfig[recipe.name] = {
+        priority: 1,
+        quantity: 1
+      }
+
+    Recipe.import(defaultConfig)
+    GemSuggestor.refreshSuggestion()
+    saveConfig("__default")
+
+
   loadConfig("__default")
   for configName in $.jStorage.index()
     addConfig(configName)

@@ -13,6 +13,11 @@ $ ->
   keyCodeMap[32] = '%space'
   keyCodeMap[8] = '%backspace'
 
+  $("body").on "click", "[data-confirm]", (e) ->
+    unless confirm($(this).data("confirm"))
+      e.preventDefault
+      e.stopPropogation()
+
   $('body').on "click", ".js-btn-group[data-toggle='buttons-radio'] .btn", (e) ->
     activateRadioButton($(this))
 

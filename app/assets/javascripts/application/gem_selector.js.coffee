@@ -38,7 +38,7 @@ $ ->
     e.preventDefault()
 
     unless $(this).is(".disabled")
-      (new GemSuggestor).disableButtons()
+      (new GemSuggestor).disableButtons(true)
       gem = Gem.findByFullName($.trim($(this).data('value')))
       gem.select()
       $(".js-clear-choices").trigger("click")
@@ -47,7 +47,7 @@ $ ->
     e.preventDefault()
 
     unless $(this).is(".disabled")
-      (new GemSuggestor).disableButtons()
+      (new GemSuggestor).disableButtons(true)
       recipe = Recipe.findByName($(this).data('value'))
       $.each recipe.gems, (index, gem) -> gem.select()
       $(".js-clear-choices").trigger("click")
@@ -68,6 +68,19 @@ $ ->
     $(".js-remove-gem-option").trigger("click")
     $(".js-gem-selector .btn.active").removeClass("active")
     $(".js-gem-selector .js-btn-group").data("value", null)
+
+  $("body").on "click", ".js-reset-everything", (e) ->
+    e.preventDefault()
+    GemSuggestor.availableGems = []
+    $(".js-available-gems").empty()
+    Gem.selectedGems = []
+    $(".js-selected-gems").empty()
+
+    $(".js-gem-selector .btn.active").removeClass("active")
+    $(".js-gem-selecor .js-btn-group").data("value", null)
+    GemSuggestor.refreshSuggestion()
+
+
 
   GemSuggestor.refreshSuggestion()
 

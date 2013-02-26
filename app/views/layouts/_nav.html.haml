@@ -6,5 +6,7 @@
           %button.btn.btn-primary{type: 'button', data: {toggle: "modal", target: "#save-window"}} Save Configuration
         .span3
           %button.btn.btn-primary{type: 'button', data: {toggle: "modal", target: "#load-window"}} Load Configuration
+        .pull-right
+          %button.btn.btn-danger.js-reset-everything{type: 'button', "data-confirm" => "This will reset everything except your configuration."} Reset All
 = render partial: 'configurations/edit'
 = render partial: 'configurations/index'
