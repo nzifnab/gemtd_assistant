@@ -5,13 +5,15 @@
     != JST["gem_button"](object: @gem, class: "js-base")
   %td.js-gem-recipes
     - for recipe in @gem.recipes()
-      != JST["gem_button"](object: recipe, class: "disabled")
+      - unless recipe.name == @gem.fullName()
+        != JST["gem_button"](object: recipe, class: "disabled")
   %td
     - if (downgraded = @gem.downgrade())?
       != JST["gem_button"](object: downgraded, class: "js-base")
 
       - for recipe in downgraded.recipes()
-        != JST["gem_button"](object: recipe, class: "disabled")
+        - unless recipe.name == downgraded.fullName()
+          != JST["gem_button"](object: recipe, class: "disabled")
 
     - else
       &mdash;
@@ -20,7 +22,8 @@
       != JST["gem_button"](object: upgraded, class: "disabled js-upgrade")
 
       - for recipe in upgraded.recipes()
-        != JST["gem_button"](object: recipe, class: "disabled .js-upgrade")
+        - unless recipe.name == upgraded.fullName()
+          != JST["gem_button"](object: recipe, class: "disabled .js-upgrade")
 
       - if (doubleUpgrade = upgraded.upgrade())?
         != JST["gem_button"](object: doubleUpgrade, class: "hidden js-double-upgrade")
