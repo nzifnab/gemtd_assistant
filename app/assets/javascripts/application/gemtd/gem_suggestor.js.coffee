@@ -35,8 +35,23 @@ class window.GemSuggestor
     # We want to prioritize one-shot recipes.
     # but if by some miracle you got a great or better
     # you probably want that instead.
+
+    return @filterRecipesAgainstGems()
+
+  filterRecipesAgainstGems: ->
     greatRank = GemQuality.findByName("Great").rank
-    if @oneshotRecipes.length <= 0 || (@suggestableGems.areAny (gem) -> gem.quality.rank >= greatRank)
+    perfectRank = GemQuality.findByName("Perfect").rank
+    maxRecipeRank = (@oneshotRecipes.max (recipe) ->
+      recipe.maxRank())?.maxRank()
+
+    # *) ALWAYS uses a gem selection if there's a great or better
+    #    in the suggestions
+    # *) Use a gem selection if there's a perfect in the suggestions
+    #      and no perfects in the oneshot recipes
+    if @oneshotRecipes.length <= 0 || (@suggestableGems.areAny (gem) ->
+          gem.quality.rank >= greatRank || (gem.quality.rank >= perfectRank && maxRecipeRank < perfectRank)
+    )
+
       @suggestableGems.uniq()
     else
       @oneshotRecipes.uniq()

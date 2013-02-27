@@ -27,12 +27,18 @@ Array::countOfValue = (val) ->
   count
 
 Array::max = (init=null, comparisonFunction=null) ->
-  val = init ? -50000
+  if typeof init == "function"
+    comparisonFunction = init
+    init = null
+
+  maxval = init ? -50000
+
   for v in this
     newval = if comparisonFunction? then comparisonFunction(v) else v
-    if newval > val
-      val = newval
-  val
+    if newval > maxval
+      maxval = newval
+      maxobj = v
+  maxobj
 
 Array::uniq = ->
   result = []

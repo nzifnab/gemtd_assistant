@@ -14,7 +14,7 @@ class window.Recipe
     @extended = extended ? @extended
 
   toString: ->
-    @name()
+    @name
 
   isOneshot: ->
     @_isOneshot ?= do =>
@@ -23,6 +23,11 @@ class window.Recipe
 
   refreshVolatileCache: ->
     @_isOneshot = null
+    @_maxRank = null
+
+  maxRank: ->
+    @_maxRank ?= (@gems.max (gem) ->
+      gem.quality.rank).quality.rank
 
   @all: ->
     @allRecipes ?= do =>
