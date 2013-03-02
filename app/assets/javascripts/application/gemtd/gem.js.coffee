@@ -37,8 +37,9 @@ class window.Gem
     @_remainingQuantity
 
   priority: ->
-    @_priority ?= @recipes().max -1, (recipe) =>
+    @_priority ?= @recipes().max(-1, (recipe) =>
       recipe.priority
+    ).priority
 
   isSaturated: ->
     @_isSaturated ?= @selectedQuantity() >= @recipeQuantity()
