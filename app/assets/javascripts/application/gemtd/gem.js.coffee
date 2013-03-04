@@ -36,8 +36,13 @@ class window.Gem
     @_remainingQuantity ?= [@recipeQuantity() - @selectedQuantity(), 0].max()
     @_remainingQuantity
 
+  lowestRecipeRemainingQuantity: ->
+    @_lowestRecipeRemainingQuantity ?= @recipes().select((recipe) -> recipe.gems.length > 1).min((recipe) ->
+      recipe.gemQuantityUntilCrafted()
+    ).gemQuantityUntilCrafted()
+
   priority: ->
-    @_priority ?= @recipes().max(-1, (recipe) =>
+    @_priority ?= @recipes().max((recipe) =>
       recipe.priority
     ).priority
 
@@ -63,6 +68,7 @@ class window.Gem
     @_priority = null
     @_isSaturated = null
     @_outnumbersRecipeSiblings = null
+    @_lowestRecipeRemainingQuantity = null
 
   @selectedGems: []
 

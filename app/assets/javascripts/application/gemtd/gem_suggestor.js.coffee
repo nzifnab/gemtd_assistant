@@ -31,6 +31,9 @@ class window.GemSuggestor
     # Step 4:  Collect gems from the highest upgrade level
     #          (perfect > flawless > normal > flawed > chipped)
     @filterHighestQuality()
+    # Step 5:  From the remaining gems, select ones that will most-closely complete
+    #           a full recipe.
+    @filterToCompleteRecipes()
 
     # We want to prioritize one-shot recipes.
     # but if by some miracle you got a great or better
@@ -71,6 +74,20 @@ class window.GemSuggestor
       else if recipe.priority == maxPriorityFound
         recipes.push(recipe)
     @oneshotRecipes = recipes
+
+  filterToCompleteRecipes: ->
+    minQuantity = 20
+    gems = []
+
+    for gem in @suggestableGems
+      remainingQuantity = gem.lowestRecipeRemainingQuantity()
+      if remainingQuantity < minQuantity
+        minQuantity = remainingQuantity
+        gems = [gem]
+      else if remainingQuantity == minQuantity
+        gems.push(gem)
+
+    @suggestableGems = gems
 
   filterHighestQuality: ->
     maxRank = 0

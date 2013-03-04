@@ -38,7 +38,19 @@ Array::max = (init=null, comparisonFunction=null) ->
     if newval > maxval
       maxval = newval
       maxobj = v
+  window.__count = maxval
   maxobj
+
+Array::min = (comparisonFunction=null) ->
+  minval = 500000
+
+  for v in this
+    newval = if comparisonFunction? then comparisonFunction(v) else v
+    if newval < minval
+      minval = newval
+      minobj = v
+  window.__count = minval
+  minobj
 
 Array::uniq = ->
   result = []

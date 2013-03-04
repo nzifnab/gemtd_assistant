@@ -24,10 +24,23 @@ class window.Recipe
   refreshVolatileCache: ->
     @_isOneshot = null
     @_maxRank = null
+    @_gemQuantityUntilCrafted = null
 
   maxRank: ->
     @_maxRank ?= (@gems.max (gem) ->
       gem.quality.rank).quality.rank
+
+  gemQuantityUntilCrafted: ->
+    @_gemQuantityUntilCrafted ?= do =>
+      @gems.min((gem) ->
+        Gem.selectedGems.countOfValue(gem)
+      )
+      minCount = window.__count
+
+      count = 0
+      for gem in @gems
+        count += 1 if Gem.selectedGems.countOfValue(gem) == minCount
+      count
 
   @all: ->
     @allRecipes ?= do =>
