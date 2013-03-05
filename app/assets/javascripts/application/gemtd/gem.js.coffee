@@ -38,7 +38,7 @@ class window.Gem
 
   lowestRecipeRemainingQuantity: ->
     @_lowestRecipeRemainingQuantity ?= do =>
-      @recipes().select((recipe) -> recipe.gems.length > 1).min((recipe) ->
+      @recipes().min((recipe) ->
         recipe.gemQuantityUntilCrafted()
       )
       window.__count

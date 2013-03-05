@@ -76,12 +76,12 @@ class window.GemSuggestor
     @oneshotRecipes = recipes
 
   filterToCompleteRecipes: ->
-    minQuantity = 20
+    minQuantity = null
     gems = []
 
     for gem in @suggestableGems
       remainingQuantity = gem.lowestRecipeRemainingQuantity()
-      if remainingQuantity < minQuantity
+      if !minQuantity? || remainingQuantity < minQuantity
         minQuantity = remainingQuantity
         gems = [gem]
       else if remainingQuantity == minQuantity
