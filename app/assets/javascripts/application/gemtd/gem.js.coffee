@@ -37,9 +37,11 @@ class window.Gem
     @_remainingQuantity
 
   lowestRecipeRemainingQuantity: ->
-    @_lowestRecipeRemainingQuantity ?= @recipes().select((recipe) -> recipe.gems.length > 1).min((recipe) ->
-      recipe.gemQuantityUntilCrafted()
-    ).gemQuantityUntilCrafted()
+    @_lowestRecipeRemainingQuantity ?= do =>
+      @recipes().select((recipe) -> recipe.gems.length > 1).min((recipe) ->
+        recipe.gemQuantityUntilCrafted()
+      )
+      window.__count
 
   priority: ->
     @_priority ?= @recipes().max((recipe) =>
