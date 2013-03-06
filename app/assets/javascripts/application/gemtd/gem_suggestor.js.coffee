@@ -4,36 +4,45 @@ class window.GemSuggestor
   suggestions: ->
     @disableButtons()
     @suggestableGems = GemSuggestor.availableGems.slice(0)
+    Logger.debug "available Gems:", @suggestableGems.slice(0)
     @checkDuplicates()
+    Logger.debug "Checked duplicates", @suggestableGems.slice(0)
     downgrades = (GemSuggestor.availableGems.map (gem) -> gem.downgrade()).reject (gem) -> !gem?
     @suggestableGems.push(downgrades...)
+    Logger.debug "Added downgrades", @suggestableGems.slice(0)
 
     # First let's check if there's any available one-shots
     # that haven't been saturated and use the highest priority one
     @oneshotRecipes = []
     @filterOneshotRecipes()
+    Logger.debug "Available oneshots:", @oneshotRecipes.slice(0)
 
     # No one-shots...continue checking gems
 
     # Step 1:  Select only gems that have not been saturated yet
     @rejectSaturatedGems()
+    Logger.debug "Rejected saturated gems", @suggestableGems.slice(0)
     # Step 2:  Collect only those gems from the highest
     #          found priority level unless that type of
     #          gem has been collected more times than the others
     #          for that recipe.
     @filterHighestPriority()
+    Logger.debug "Filtered highest priority gems", @suggestableGems.slice(0)
     # Step 3:  Collect only gems from the highest amount of gems
     #          left to collect, but also consider perfects to be
     #          at the top of the precedence for this step.
     #          This 'count' must also include the downgraded version
     #          of the gem (for counting purposes only)
     @filterHighestQuantityNeeded()
+    Logger.debug "Filtered highest quantity needed", @suggestableGems.slice(0)
     # Step 4:  Collect gems from the highest upgrade level
     #          (perfect > flawless > normal > flawed > chipped)
     @filterHighestQuality()
+    Logger.debug "Filtered highest quality gems", @suggestableGems.slice(0)
     # Step 5:  From the remaining gems, select ones that will most-closely complete
     #           a full recipe.
     @filterToCompleteRecipes()
+    Logger.debug "Filtered closest-to-recipe-completed gems", @suggestableGems.slice(0)
 
     # We want to prioritize one-shot recipes.
     # but if by some miracle you got a great or better
@@ -54,10 +63,11 @@ class window.GemSuggestor
     if @oneshotRecipes.length <= 0 || (@suggestableGems.areAny (gem) ->
           gem.quality.rank >= greatRank || (gem.quality.rank >= perfectRank && maxRecipeRank < perfectRank)
     )
-
+      Logger.debug "Using selected gems", @suggestableGems
       @suggestableGems.uniq()
     else
       @oneshotRecipes.uniq()
+      Logger.debug "Using oneshot recipe(s)", @oneshotRecipes
 
   filterOneshotRecipes: ->
     for gem in GemSuggestor.availableGems
@@ -80,14 +90,17 @@ class window.GemSuggestor
     gems = []
 
     for gem in @suggestableGems
-      remainingQuantity = gem.lowestRecipeRemainingQuantity()
-      if !minQuantity? || remainingQuantity < minQuantity
-        minQuantity = remainingQuantity
-        gems = [gem]
-      else if remainingQuantity == minQuantity
-        gems.push(gem)
 
-    @suggestableGems = gems
+      if !gem.outnumbersRecipeSiblings()
+        remainingQuantity = gem.lowestRecipeRemainingQuantity()
+        if !minQuantity? || remainingQuantity < minQuantity
+          minQuantity = remainingQuantity
+          gems = [gem]
+        else if remainingQuantity == minQuantity
+          gems.push(gem)
+
+    if gems.length > 0
+      @suggestableGems = gems
 
   filterHighestQuality: ->
     maxRank = 0
@@ -300,6 +313,9 @@ class window.GemSuggestor
       # The gem is not needed at all
       if recipeQuantity <= 0
         $icon.addClass("icon-star-empty")
+
+        if selectedQuantity > 0
+          $icon.addClass("notification-over-saturation")
       # The gem has been collected, but more are required
       else if selectedQuantity > 0 && recipeQuantity > selectedQuantity
         $icon.addClass("notification-partial-saturation")
