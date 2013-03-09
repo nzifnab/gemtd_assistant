@@ -66,8 +66,8 @@ class window.GemSuggestor
       Logger.debug "Using selected gems", @suggestableGems
       @suggestableGems.uniq()
     else
-      @oneshotRecipes.uniq()
       Logger.debug "Using oneshot recipe(s)", @oneshotRecipes
+      @oneshotRecipes.uniq()
 
   filterOneshotRecipes: ->
     for gem in GemSuggestor.availableGems
